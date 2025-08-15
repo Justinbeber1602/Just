@@ -1,269 +1,349 @@
-– 📌 ต้องรันใน LocalScript เท่านั้น
-local Library = loadstring(game:HttpGet(“https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua”))()
-local Window = Library.CreateLib(“JustHub”, “BloodTheme”)
+-- 📌 Must run in LocalScript only
+local player = game:Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 
-local player = game.Players.LocalPlayer
-local RunService = game:GetService(“RunService”)
-local UserInputService = game:GetService(“UserInputService”)
+-- Main ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "JustHubMobile"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = game:GetService("CoreGui")
 
-– ================= Teleport Tab =================
-local TeleportTab = Window:NewTab(“Teleport”)
-local LocationSection = TeleportTab:NewSection(“เลือกสถานที่”)
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0.9, 0, 0.9, 0)
+MainFrame.Position = UDim2.new(0.05, 0, 0.05, 0)
+MainFrame.AnchorPoint = Vector2.new(0, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
 
-local locations = {
-{name = “ตลาดโลก”, cframe = CFrame.new(2846.01, 16.55, 2108.39)},
-{name = “ATM ตลาดโลก”, cframe = CFrame.new(2999.37, 16.60, 2278.67)},
-{name = “ผับ”, cframe = CFrame.new(3158.82, 16.69, 2300.57)},
-{name = “ร้านอาหาร”, cframe = CFrame.new(3486.12, 18.24, 2581.56)},
-{name = “อู่”, cframe = CFrame.new(2814.99, 18.24, 2671.00)},
-{name = “โรงพยาบาล”, cframe = CFrame.new(3012.29, 16.64, 3526.09)},
-{name = “สถานีตำรวจ”, cframe = CFrame.new(3632.24, 24.07, 3215.28)},
-{name = “หมู”, cframe = CFrame.new(-533.00, 58.63, 3132.92)},
-{name = “กล้วย”, cframe = CFrame.new(-1099.27, 130.38, 2420.52)},
-{name = “ดอกไม้”, cframe = CFrame.new(-1790.67, 130.10, 1135.51)},
-{name = “มะพร้าว”, cframe = CFrame.new(-2832.60, 20.46, 2197.16)},
-{name = “แลนแดง”, cframe = CFrame.new(-3891.84, 76.42, -486.54)},
-{name = “เหล็ก1”, cframe = CFrame.new(-4078.10, 70.95, -2818.08)},
-{name = “หญ้า”, cframe = CFrame.new(-2445.71, 74.97, -2037.70)},
-{name = “พริก”, cframe = CFrame.new(-611.63, 16.96, -3343.03)},
-{name = “หิน”, cframe = CFrame.new(-191.36, 17.35, -2391.63)},
-{name = “แลกมะม่วง”, cframe = CFrame.new(1060.44, 18.08, -521.77)},
-{name = “ไม้”, cframe = CFrame.new(2410.08, 33.03, -2410.61)},
-{name = “แปรรูปหิน”, cframe = CFrame.new(6149.76, 51.03, -4225.38)},
-{name = “ร้านค้าและปั้ม”, cframe = CFrame.new(5668.79, 50.98, -3112.81)},
-{name = “ข้าวโพด”, cframe = CFrame.new(5207.04, 47.10, -2238.00)},
-{name = “องุ่น”, cframe = CFrame.new(5460.13, 49.22, -1191.45)},
-{name = “สตอร์เบอรี่”, cframe = CFrame.new(5949.39, 50.97, -1699.58)},
-{name = “กระหล่ำ”, cframe = CFrame.new(6085.44, 51.19, -2235.12)},
+-- Corner rounding
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0.03, 0)
+UICorner.Parent = MainFrame
+
+-- Drop shadow
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(80, 80, 80)
+UIStroke.Parent = MainFrame
+
+-- Title Bar
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0.08, 0)
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+local TitleText = Instance.new("TextLabel")
+TitleText.Name = "TitleText"
+TitleText.Size = UDim2.new(0.7, 0, 1, 0)
+TitleText.Position = UDim2.new(0.15, 0, 0, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.Text = "JustHub"
+TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleText.TextScaled = true
+TitleText.Font = Enum.Font.GothamBold
+TitleText.Parent = TitleBar
+
+-- Close Button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0.1, 0, 0.8, 0)
+CloseButton.Position = UDim2.new(0.89, 0, 0.1, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextScaled = true
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Parent = TitleBar
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0.3, 0)
+CloseCorner.Parent = CloseButton
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Tab Buttons
+local TabButtonsFrame = Instance.new("Frame")
+TabButtonsFrame.Name = "TabButtonsFrame"
+TabButtonsFrame.Size = UDim2.new(1, 0, 0.1, 0)
+TabButtonsFrame.Position = UDim2.new(0, 0, 0.08, 0)
+TabButtonsFrame.BackgroundTransparency = 1
+TabButtonsFrame.Parent = MainFrame
+
+-- Content Frame
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Size = UDim2.new(1, 0, 0.82, 0)
+ContentFrame.Position = UDim2.new(0, 0, 0.18, 0)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+-- Scrolling Frame for content
+local ScrollFrame = Instance.new("ScrollingFrame")
+ScrollFrame.Name = "ScrollFrame"
+ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
+ScrollFrame.Position = UDim2.new(0, 0, 0, 0)
+ScrollFrame.BackgroundTransparency = 1
+ScrollFrame.ScrollBarThickness = 5
+ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ScrollFrame.Parent = ContentFrame
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.Parent = ScrollFrame
+
+-- Create tabs
+local Tabs = {
+    Teleport = {
+        Name = "Teleport",
+        Color = Color3.fromRGB(80, 120, 200)
+    },
+    Misc = {
+        Name = "Misc",
+        Color = Color3.fromRGB(200, 120, 80)
+    }
 }
 
-for _, loc in ipairs(locations) do
-LocationSection:NewButton(loc.name, “กดเพื่อวาร์ปไปยัง “ .. loc.name, function()
-local character = player.Character or player.CharacterAdded:Wait()
-local root = character:WaitForChild(“HumanoidRootPart”)
-root.CFrame = loc.cframe
-end)
-end
+local currentTab = nil
 
-– ================= Misc Tab =================
-local MiscTab = Window:NewTab(“Misc”)
-local MiscSection = MiscTab:NewSection(“ฟีเจอร์เสริม”)
-
-– Noclip variables
-local noclipEnabled = false
-local noclipConnection
-
-local function EnableNoclip()
-if noclipConnection then
-noclipConnection:Disconnect()
-noclipConnection = nil
-end
-noclipConnection = RunService.Stepped:Connect(function()
-if not noclipEnabled then return end
-local character = player.Character
-if character then
-for _, part in pairs(character:GetChildren()) do
-if part:IsA(“BasePart”) then
-part.CanCollide = false
-end
-end
-end
-end)
-end
-
-local function DisableNoclip()
-if noclipConnection then
-noclipConnection:Disconnect()
-noclipConnection = nil
-end
-local character = player.Character
-if character then
-for _, part in pairs(character:GetChildren()) do
-if part:IsA(“BasePart”) then
-part.CanCollide = true
-end
-end
-end
-end
-
-– Toggle Noclip
-MiscSection:NewToggle(“เปิด/ปิด Noclip”, “เปิดหรือปิดโหมดเดินทะลุ”, function(value)
-noclipEnabled = value
-if noclipEnabled then
-EnableNoclip()
-else
-DisableNoclip()
-end
-end)
-
-– ================= ฟิกซ์ UI สำหรับมือถือ =================
-task.wait(2) – เพิ่มเวลารอให้ UI สร้างเสร็จสมบูรณ์
-
-local CoreGui = game:GetService(“CoreGui”)
-local TweenService = game:GetService(“TweenService”)
-
-– ฟังก์ชันหาหน้าต่างหลัก
-local function findMainFrame()
-local gui = CoreGui:FindFirstChild(“JustHub”)
-if not gui then return nil end
-
-```
--- ลองหาแบบต่างๆ
-local mainFrame = gui:FindFirstChild("Main") 
-    or gui:FindFirstChild("MainFrame")
-    or gui:FindFirstChildOfClass("Frame")
-
--- หาลึกขึ้นไปถ้าไม่เจอ
-if not mainFrame then
-    for _, child in pairs(gui:GetDescendants()) do
-        if child:IsA("Frame") and child.Size.X.Scale > 0.3 and child.Size.Y.Scale > 0.3 then
-            mainFrame = child
-            break
+-- Function to create a tab button
+local function createTabButton(tabName, color, positionX)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Name = tabName.."TabButton"
+    TabButton.Size = UDim2.new(0.45, 0, 0.9, 0)
+    TabButton.Position = UDim2.new(positionX, 0, 0.05, 0)
+    TabButton.BackgroundColor3 = color
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.TextScaled = true
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.Parent = TabButtonsFrame
+    
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0.2, 0)
+    Corner.Parent = TabButton
+    
+    TabButton.MouseButton1Click:Connect(function()
+        if currentTab ~= tabName then
+            -- Clear current content
+            for _, child in ipairs(ScrollFrame:GetChildren()) do
+                if child:IsA("Frame") then
+                    child:Destroy()
+                end
+            end
+            
+            -- Show new content
+            if tabName == "Teleport" then
+                createTeleportContent()
+            elseif tabName == "Misc" then
+                createMiscContent()
+            end
+            
+            currentTab = tabName
         end
-    end
-end
-
-return mainFrame
-```
-
-end
-
-local function setupMobileUI()
-local mainFrame = findMainFrame()
-if not mainFrame then
-print(“ไม่พบ MainFrame”)
-return
-end
-
-```
-print("พบ MainFrame:", mainFrame.Name)
-
--- ทำให้ลากได้บนมือถือและเดสก์ทอป
-mainFrame.Active = true
-mainFrame.Draggable = true
-
--- ปรับปรุงการลากสำหรับมือถือ
-if UserInputService.TouchEnabled then
-    -- เพิ่ม ZIndex ให้สูงกว่า
-    mainFrame.ZIndex = 10
-    
-    -- ปรับ SelectionImageObject สำหรับ Touch
-    mainFrame.SelectionImageObject = nil
-    
-    -- เพิ่ม Properties สำหรับ Touch
-    pcall(function()
-        mainFrame.TouchPan = true
     end)
+    
+    return TabButton
 end
 
--- สร้างปุ่มปิดที่ทำงานได้ดีบนมือถือ
-local closeBtn = Instance.new("TextButton")
-closeBtn.Name = "CloseButton"
-closeBtn.Size = UDim2.new(0, 35, 0, 35) -- ขยายขนาดสำหรับมือถือ
-closeBtn.Position = UDim2.new(1, -40, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(220, 53, 69) -- สีแดงที่เด่นชัด
-closeBtn.BorderSizePixel = 0
-closeBtn.Text = "✕"
-closeBtn.TextColor3 = Color3.new(1, 1, 1)
-closeBtn.TextScaled = true
-closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.ZIndex = 20 -- ให้อยู่ข้างหน้าสุด
-closeBtn.Active = true -- สำคัญสำหรับ Touch
+-- Create the tab buttons
+local teleportTabButton = createTabButton("Teleport", Tabs.Teleport.Color, 0.025)
+local miscTabButton = createTabButton("Misc", Tabs.Misc.Color, 0.525)
 
--- เพิ่ม Corner และ Shadow
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 8)
-corner.Parent = closeBtn
+-- Function to create a button
+local function createButton(text, description, callback, parent)
+    local ButtonFrame = Instance.new("Frame")
+    ButtonFrame.Name = text.."ButtonFrame"
+    ButtonFrame.Size = UDim2.new(0.95, 0, 0, 60)
+    ButtonFrame.Position = UDim2.new(0.025, 0, 0, 0)
+    ButtonFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    ButtonFrame.Parent = parent
+    
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0.1, 0)
+    Corner.Parent = ButtonFrame
+    
+    local Button = Instance.new("TextButton")
+    Button.Name = text.."Button"
+    Button.Size = UDim2.new(1, 0, 1, 0)
+    Button.Position = UDim2.new(0, 0, 0, 0)
+    Button.BackgroundTransparency = 1
+    Button.Text = ""
+    Button.Parent = ButtonFrame
+    
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.Size = UDim2.new(0.9, 0, 0.6, 0)
+    Title.Position = UDim2.new(0.05, 0, 0.1, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.TextScaled = true
+    Title.Font = Enum.Font.GothamBold
+    Title.Parent = ButtonFrame
+    
+    local Desc = Instance.new("TextLabel")
+    Desc.Name = "Description"
+    Desc.Size = UDim2.new(0.9, 0, 0.3, 0)
+    Desc.Position = UDim2.new(0.05, 0, 0.6, 0)
+    Desc.BackgroundTransparency = 1
+    Desc.Text = description
+    Desc.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Desc.TextXAlignment = Enum.TextXAlignment.Left
+    Desc.TextScaled = true
+    Desc.Font = Enum.Font.Gotham
+    Desc.Parent = ButtonFrame
+    
+    -- Hover effect
+    Button.MouseEnter:Connect(function()
+        TweenService:Create(ButtonFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(70, 70, 70)}):Play()
+    end)
+    
+    Button.MouseLeave:Connect(function()
+        TweenService:Create(ButtonFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+    end)
+    
+    Button.MouseButton1Click:Connect(function()
+        TweenService:Create(ButtonFrame, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+        TweenService:Create(ButtonFrame, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+        callback()
+    end)
+    
+    return ButtonFrame
+end
 
--- Hover Effect
-closeBtn.MouseEnter:Connect(function()
-    local tween = TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(255, 69, 89),
-        Size = UDim2.new(0, 38, 0, 38)
-    })
-    tween:Play()
-end)
-
-closeBtn.MouseLeave:Connect(function()
-    local tween = TweenService:Create(closeBtn, TweenInfo.new(0.2), {
-        BackgroundColor3 = Color3.fromRGB(220, 53, 69),
-        Size = UDim2.new(0, 35, 0, 35)
-    })
-    tween:Play()
-end)
-
--- เชื่อมต่อการปิด (รองรับทั้ง Click และ Touch)
-closeBtn.Activated:Connect(function() -- ใช้ Activated แทน MouseButton1Click
-    print("ปิด GUI")
-    local gui = CoreGui:FindFirstChild("JustHub")
-    if gui then
-        -- ปิดการเชื่อมต่อ Noclip ก่อน
+-- Function to create teleport content
+local function createTeleportContent()
+    local SectionTitle = Instance.new("TextLabel")
+    SectionTitle.Name = "TeleportSectionTitle"
+    SectionTitle.Size = UDim2.new(0.9, 0, 0, 40)
+    SectionTitle.Position = UDim2.new(0.05, 0, 0, 0)
+    SectionTitle.BackgroundTransparency = 1
+    SectionTitle.Text = "เลือกสถานที่"
+    SectionTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SectionTitle.TextScaled = true
+    SectionTitle.Font = Enum.Font.GothamBold
+    SectionTitle.Parent = ScrollFrame
+    
+    local locations = {
+        {name = "ตลาดโลก", cframe = CFrame.new(2846.01, 16.55, 2108.39)},
+        {name = "ATM ตลาดโลก", cframe = CFrame.new(2999.37, 16.60, 2278.67)},
+        {name = "ผับ", cframe = CFrame.new(3158.82, 16.69, 2300.57)},
+        {name = "ร้านอาหาร", cframe = CFrame.new(3486.12, 18.24, 2581.56)},
+        {name = "อู่", cframe = CFrame.new(2814.99, 18.24, 2671.00)},
+        {name = "โรงพยาบาล", cframe = UDim2.new(0.9, 0, 0, 40)
+    SectionTitle.Position = UDim2.new(0.05, 0, 0, 0)
+    SectionTitle.BackgroundTransparency = 1
+    SectionTitle.Text = "ฟีเจอร์เสริม"
+    SectionTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SectionTitle.TextScaled = true
+    SectionTitle.Font = Enum.Font.GothamBold
+    SectionTitle.Parent = ScrollFrame
+    
+    -- Noclip Toggle
+    local noclipEnabled = false
+    local noclipConnection
+    
+    local function EnableNoclip()
         if noclipConnection then
             noclipConnection:Disconnect()
+            noclipConnection = nil
         end
-        DisableNoclip()
+        noclipConnection = RunService.Stepped:Connect(function()
+            if not noclipEnabled then return end
+            local character = player.Character
+            if character then
+                for _, part in pairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end
+    
+    local function DisableNoclip()
+        if noclipConnection then
+            noclipConnection:Disconnect()
+            noclipConnection = nil
+        end
+        local character = player.Character
+        if character then
+            for _, part in pairs(character:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
+        end
+    end
+    
+    local noclipButton = createButton("Noclip", "เปิด/ปิดโหมดเดินทะลุ", function()
+        noclipEnabled = not noclipEnabled
+        if noclipEnabled then
+            EnableNoclip()
+            noclipButton.Title.Text = "Noclip: เปิด"
+        else
+            DisableNoclip()
+            noclipButton.Title.Text = "Noclip: ปิด"
+        end
+    end, ScrollFrame)
+    
+    -- More Misc buttons can be added here
+end
+
+-- Make window draggable
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function updateInput(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, 
+                                 startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
         
-        -- Tween ปิด
-        local closeTween = TweenService:Create(gui, TweenInfo.new(0.3), {
-            Size = UDim2.new(0, 0, 0, 0)
-        })
-        closeTween:Play()
-        closeTween.Completed:Connect(function()
-            gui:Destroy()
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
         end)
     end
 end)
 
-closeBtn.Parent = mainFrame
-print("สร้างปุ่มปิดเสร็จแล้ว")
-
--- เพิ่ม Toggle Button สำหรับซ่อน/แสดง UI (ใหม่!)
-local toggleBtn = Instance.new("TextButton")
-toggleBtn.Name = "ToggleButton"
-toggleBtn.Size = UDim2.new(0, 30, 0, 30)
-toggleBtn.Position = UDim2.new(1, -75, 0, 5)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(52, 144, 220)
-toggleBtn.BorderSizePixel = 0
-toggleBtn.Text = "_"
-toggleBtn.TextColor3 = Color3.new(1, 1, 1)
-toggleBtn.TextScaled = true
-toggleBtn.Font = Enum.Font.SourceSansBold
-toggleBtn.ZIndex = 20
-toggleBtn.Active = true
-
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 6)
-toggleCorner.Parent = toggleBtn
-
-local isMinimized = false
-local originalSize = mainFrame.Size
-
-toggleBtn.Activated:Connect(function()
-    if isMinimized then
-        -- แสดง UI
-        mainFrame:TweenSize(originalSize, "Out", "Quad", 0.3)
-        toggleBtn.Text = "_"
-        isMinimized = false
-    else
-        -- ซ่อน UI (เก็บแค่ Header)
-        originalSize = mainFrame.Size
-        mainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, 50), "Out", "Quad", 0.3)
-        toggleBtn.Text = "□"
-        isMinimized = true
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
 end)
 
-toggleBtn.Parent = mainFrame
-```
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        updateInput(input)
+    end
+end)
 
-end
-
-– เรียกใช้ฟังก์ชัน
-setupMobileUI()
-
-– ตรวจสอบซ้ำในกรณีที่ UI ยังไม่พร้อม
-task.wait(1)
-if not CoreGui:FindFirstChild(“JustHub”) or not findMainFrame() then
-task.wait(2)
-setupMobileUI()
-end
+-- Start with Teleport tab open
+createTeleportContent()
+currentTab = "Teleport"
